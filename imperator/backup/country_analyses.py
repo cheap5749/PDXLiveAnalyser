@@ -8,30 +8,10 @@ def test(source):
     print (source["112"])
     
 def extract(source):
-    
-    with open("imperator/mappings/countries_names.csv") as countries_names:
-        countries_names = pandas.read_csv(countries_names, sep=";", header=None)
-        countries_names.columns = ["country_name_key", "country_name"]
-        countries_names.set_index("country_name_key", inplace=True)
-        
-    with open("imperator/mappings/geography_names.csv") as geography_names:
-        geography_names = pandas.read_csv(geography_names, sep=";", header=None)
-        geography_names.columns = ["geography_name_key", "geography_name"]
-        geography_names.set_index("geography_name_key", inplace=True)
-        
-    with open("imperator/mappings/gov_names.csv") as gov_names:
-        gov_names = pandas.read_csv(gov_names, sep=";", header=None)
-        gov_names.columns = ["gov_name_key", "gov_name"]
-        try :
-            gov_names.set_index("gov_name_key", inplace=True)
-        except:
-            print(gov_names)
-        
+
     attributes={
     "tag": ["tag","N/A","N/A"],
     "country_name_key": ["country_name","name","N/A"],
-    "country_name_text": ["N/A","N/A","N/A"],
-    "country_name_adj": ["N/A","N/A","N/A"],
     "total_population": ["total_population","N/A","N/A"],
     "total_holdings": ["total_holdings","N/A","N/A"],
     "historical": ["historical","N/A","N/A"],
@@ -129,52 +109,7 @@ def extract(source):
                     attr_value = int(attr_value)
                 if "income" in attr:
                     attr_value = float(source[x]["economy"][attributes[attr][1]][attributes[attr][2]])
-                ######################### NAMING BIG TIME !!!!
-                if "country_name_text" == attr:
-                    cur_country_tag = source[x]["tag"]
-                    try :
-                        cur_government_key = source[x]["government_key"]
-                    except:
-                        cur_government_key = "Erreur gov"
-
-                    hist_country_tag = source[x]["historical"]
-                    cur_country_name = source[x]["country_name"]["name"]
-                    ai_date = source[x]["ai"]["date"]
                     
-                    #mostly used name cases: normal (based on tag), CIVILWAR_FACTION_NAME, province (PROV4546), region (ex: kharesmia_superior), area (achaea_area)
-                    if cur_country_tag in cur_country_name:
-                        try:
-                            cur_country_name = countries_names.at[cur_country_tag,"country_name"]
-                        except:
-                            print("Country "+str(x)+": tag has no name in Mapping: manual change?")
-                    elif "CIVILWAR_FACTION_NAME" in cur_country_name:
-                        try:
-                            cur_country_name = countries_names.at[hist_country_tag+"_ADJ","country_name"]+" revolt of "+ai_date[0:3]
-                        except:
-                            cur_country_name = cur_country_name +" (error)"
-                            #countries_names.at[cur_country_tag+"_ADJ","country_name"]+" revolt"
-                    else:
-                        try:
-                            cur_country_name = gov_names.at[cur_government_key,"gov_name"]+" of "+geography_names.at[cur_country_name,"geography_name"]
-                        except:
-                            try:
-                                cur_country_name = cur_country_name[:cur_country_name.find("_")]
-                                cur_country_name = gov_names.at[cur_government_key,"gov_name"]+" of "+geography_names.at[cur_country_name,"geography_name"]
-                            except:
-                                cur_country_name = gov_names.at[cur_government_key,"gov_name"]+" of "+cur_country_name
-
-                    attr_value = cur_country_name
-                    
-                if "country_name_adj" == attr:
-                    cur_country_tag = source[x]["tag"]
-                    try:
-                        cur_country_adj = countries_names.at[cur_country_tag+"_ADJ","country_name"]
-                    except:
-                        cur_country_adj = cur_country_tag
-                        
-                    attr_value = cur_country_adj
-                    
-                ######################### HOPEFULLY WE DONE
                 if "active_inventions" in attr:
                     attr_value = sum(source[x]["active_inventions"])
                 else: None
@@ -189,6 +124,11 @@ def extract(source):
 
     countries=pandas.DataFrame(currentobj, index=(x for x in source.keys()))
     countries.columns = attributes.keys()
-
+    
+    with open("imperator/mappings/countries_names.csv") as countries_names:
+        countries_names = pandas.read_csv(countries_names, sep=";", header=None)
+        countries_names.columns = ["country_name_key", "country_name"]
+    
+    countries = countries.merge(countries_names, how='left', on='country_name_key')
 
     return countries

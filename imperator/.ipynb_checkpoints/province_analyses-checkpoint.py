@@ -6,10 +6,13 @@ import json
 def test(source):
     print (source)
     
-def extract(source):
+def extract_provinces(source):
+    #if len(source)==0: source = "../Imperator/analyses/scythia_solo20-02-2023_15h48.json"
+    #with open(source, encoding="utf-8") as source:
 
+    #    source=json.load(source)
     # attributes are first identified as a list & with location in save; each attribute gets a column
-    attributes={
+    province_attributes={
         "province_name":["province_name","name","N/A"],
         "state":["state","N/A","N/A"],
         "owner":["owner","N/A","N/A"],
@@ -34,47 +37,46 @@ def extract(source):
         "plundered":["plundered","N/A","N/A"],
         "holy_site":["holy_site","N/A","N/A"],
     }
-    source=source["provinces"]
     result=[]
     currentobj=[]
     #lets loop in a specific location of the save: source[xx]
-    for x in source.keys():
+    for x in source["provinces"].keys():
         if int(x) < 100000 :
             result=[]
             #since many pops per province, reset pops_count only when new province, it'll get incrementally counted after
             pops_count = 0            
-            for attr in attributes.keys():
+            for attr in province_attributes.keys():
                 attr_value = ""
-                if attributes[attr][0] in source[x]:
-                    if attributes[attr][1] != "N/A" and attributes[attr][1] in source[x][attributes[attr][0]]:
-                        if attributes[attr][2] == "N/A" :
+                if province_attributes[attr][0] in source["provinces"][x]:
+                    if province_attributes[attr][1] != "N/A" and province_attributes[attr][1] in source["provinces"][x][province_attributes[attr][0]]:
+                        if province_attributes[attr][2] == "N/A" :
                             ################ niveau 2
-                            attr_value = source[x][attributes[attr][0]][attributes[attr][1]]
-                        if attributes[attr][2] != "N/A" and attributes[attr][2] in source[x][attributes[attr][0]][attributes[attr][1]]:
+                            attr_value = source["provinces"][x][province_attributes[attr][0]][province_attributes[attr][1]]
+                        if province_attributes[attr][2] != "N/A" and province_attributes[attr][2] in source["provinces"][x][province_attributes[attr][0]][province_attributes[attr][1]]:
                             ################ niveau 3
-                            if attributes[attr][2] in source[x][attributes[attr][0]][attributes[attr][1]]:                            
-                                attr_value = source[x][attributes[attr][0]][attributes[attr][1]][attributes[attr][2]]
+                            if province_attributes[attr][2] in source["provinces"][x][province_attributes[attr][0]][province_attributes[attr][1]]:                            
+                                attr_value = source["provinces"][x][province_attributes[attr][0]][province_attributes[attr][1]][province_attributes[attr][2]]
                             else: None
                         else: None
                     else:
                         ########### niveau 1
-                        attr_value = source[x][attributes[attr][0]]
+                        attr_value = source["provinces"][x][province_attributes[attr][0]]
 
                 else: None
                 
                 if 1==1:
                     if "tech" in attr:
-                        attr_value = round(source[x]["technology"][attr]["level"] + source[x]["technology"][attr]["progress"]/100,2)
-                    if attr == "ports" and "ports" in source[x]:
-                        attr_value = len(source[x]["ports"])
+                        attr_value = round(source["provinces"][x]["technology"][attr]["level"] + source["provinces"][x]["technology"][attr]["progress"]/100,2)
+                    if attr == "ports" and "ports" in source["provinces"][x]:
+                        attr_value = len(source["provinces"][x]["ports"])
                     else: None
                         
                     if "income" in attr:
-                        attr_value = source[x]["economy"][attributes[attr][1]][attributes[attr][2]]
+                        attr_value = source["provinces"][x]["economy"][province_attributes[attr][1]][province_attributes[attr][2]]
                     # buildings format: buildings={		1 0 0 0 1 9 0 0 0 9 3 12 3 0 0 0 0 0 0 0 0 0		}
                     # for now sum it simply, maybe later could detail what type etc
                     if "buildings" in attr:
-                        attr_value = sum(source[x]["buildings"])
+                        attr_value = sum(source["provinces"][x]["buildings"])
                         
                     if "pops" in attr:
                         pops_count += 1
@@ -82,7 +84,8 @@ def extract(source):
                     result.append(attr_value)
             currentobj.append(result)
     #youhooooooo on a fini
-    output=pandas.DataFrame(currentobj, index=(x for x in source.keys()))
-    output.columns = attributes.keys()
-
+    output=pandas.DataFrame(currentobj, index=(x for x in source["provinces"].keys()))
+    output.columns = province_attributes.keys()
+    date = int(source["date"][:source["date"].find(".")])-753
+    output["year"]= date
     return output

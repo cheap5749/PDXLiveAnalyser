@@ -9,13 +9,38 @@ def test(source):
 def extract(source):
 
     attributes={
-        "religion":["religion","N/A","N/A"],
-        "type":["type","N/A","N/A"],
+        "first_name":["first_name_loc","name","N/A"],
+        "nickname":["nickname","N/A","N/A"],
+        "family_name":["family_name","N/A","N/A"],
+        "country":["country","N/A","N/A"],
+        "home":["home_country","N/A","N/A"],
+        "province":["province","N/A","N/A"],
+        "birth_date":["birth_date","N/A","N/A"],
+        "martial":["attributes","martial","N/A"],
+        "finesse":["attributes","finesse","N/A"],
+        "charisma":["attributes","charisma","N/A"],
+        "zeal":["attributes","zeal","N/A"],
+        "family":["family","N/A","N/A"],
+        "trait":["traits","N/A","N/A"],
+        "last_ruled":["last_ruler_term","N/A","N/A"],
         "culture":["culture","N/A","N/A"],
+        "ethnicity":["ethnicity","N/A","N/A"],
+        "religion":["religion","N/A","N/A"],
+        "death_date":["death_date","N/A","N/A"],
+        "death":["death","N/A","N/A"],
+        "fertility":["fertility","N/A","N/A"],
+        "health":["health","N/A","N/A"],
+        "experience":["character_experience","N/A","N/A"],
+        "popularity":["popularity","N/A","N/A"],
+        "prominence":["prominence","N/A","N/A"],
+        "wealth":["wealth","N/A","N/A"],
+        "party":["party_type","N/A","N/A"],
+        "num_ambitions":["num_ambitions","N/A","N/A"],
+        "cur_ambition":["ambition","type","N/A"],
     }
+    source=source["character"]["character_database"]
     result=[]
     currentobj=[]
-    source=source["population"]["population"]
     for x in source.keys():
         if 1 == 1 :
             result=[]
@@ -43,4 +68,5 @@ def extract(source):
     output=pandas.DataFrame(currentobj, index=(x for x in source.keys()))
     output.columns = attributes.keys()
 
+    output
     return output
