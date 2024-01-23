@@ -56,29 +56,8 @@ def extract(source):
                     atq_popularity_change=round(battle["attacker"]["popularity_change"],2)
                 else:
                     atq_popularity_change=0
-                #Now the hard bit: collect countries involved & list them
-                #soo loop this atrocity:
-                #attacker={
-                #countries={
-				#		{
-				#			country=114
-				#			sub_unit={
-				#				type="archers"
-				#				count=3000
-				#				losses=544.3
-				#				remaining=2455.7
-				#			}
-                #       }
-                #       {
-                #           country=115 etc etc
-                #       }
-                #   }
-                #}
-                #Also troops engaged and losses. i being countries and j units
-                #but first let's set/reset combat stats
-                
+                #Now the hard bit: collect countries involved & list them                
                 atq_stats=[]
-                #print(battle_id)
 
                 #LISTE DES BATAILLES, COTE ATTAQUANT
                 for i in range(len(battle["attacker"]["countries"])):
