@@ -9,6 +9,7 @@ def test(source):
 def extract(source):
 
     attributes={
+        "id":["N/A","N/A","N/A"],
         "religion":["religion","N/A","N/A"],
         "type":["type","N/A","N/A"],
         "culture":["culture","N/A","N/A"],
@@ -37,10 +38,18 @@ def extract(source):
                         attr_value = source[x][attributes[attr][0]]
 
                 else: None
+
+                if attr == "id":
+                    attr_value = int(x)
+
+
                 result.append(attr_value)
             currentobj.append(result)
     #youhooooooo on a fini
     output=pandas.DataFrame(currentobj, index=(x for x in source.keys()))
     output.columns = attributes.keys()
+    output=output.sort_values(by=["id"])
+    output.set_index("id", inplace=True)
+    output = output[output.religion != ""]
 
     return output

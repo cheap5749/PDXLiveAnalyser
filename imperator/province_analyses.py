@@ -77,13 +77,14 @@ def extract(source):
         #loop in 
         pop=0
         for pops in province.keys():
-            if "pop" in pops and pops!="population_ratio" and pops!="growing_pop":
-                try:
-                    pop=province[pops]
+            if "pop" in pops and pops!="population_ratio" and pops!="levied_pops" and pops!="move_pop_command":
+                if pops=="growing_pop" and "which" in province["growing_pop"]:
+                    pop=int(province["growing_pop"]["which"])
+                    pop_placement.append([province_id,pop])
+                elif pops!="growing_pop":
+                    pop=int(province[pops])
                     pop_count=pop_count+1
-                except:
-                    print(pops)
-                pop_placement.append([province_id,pop])
+                    pop_placement.append([province_id,pop])
 
         result.append([province_id,province_name,state, owner, controller,pop_count, last_owner_change, last_controller_change, original_culture, original_religion, culture, religion, garrison, civilization_value, trade_goods, num_of_roads, province_rank, buildings, looted, plundered, holdings, holy_site, great_work, treasures])
 
@@ -94,7 +95,8 @@ def extract(source):
     output.columns = ["province_id","province_name","state", "owner", "controller","pop_count", "last_owner_change", "last_controller_change", "original_culture", "original_religion","culture", "religion", "garrison", "civilization_value", "trade_goods", "num_of_roads", "province_rank", "buildings", "looted", "plundered", "holdings", "holy_site", "great_work", "treasures"]
     output.set_index("province_id", inplace=True)
 
+    pop_placement=pop_placement.sort_values(by=["pop"])
     pop_placement.set_index("pop", inplace=True)
 
-    return output
+    return output, pop_placement
     # return pop_placement

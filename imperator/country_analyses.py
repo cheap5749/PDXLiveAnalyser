@@ -1,8 +1,7 @@
-import os
 import pandas
-import time
-import csv
-import json
+import logging
+from imperator import naming
+
 def test(source):
     source=source["country"]["country_database"]
     print (source["112"])
@@ -131,42 +130,22 @@ def extract(source):
                     attr_value = float(source[x]["economy"][attributes[attr][1]][attributes[attr][2]])
                 ######################### NAMING BIG TIME !!!!
                 if "country_name_text" == attr:
-                    cur_country_tag = source[x]["tag"]
-                    try :
-                        cur_government_key = source[x]["government_key"]
-                    except:
-                        cur_government_key = "Erreur gov"
-
-                    hist_country_tag = source[x]["historical"]
-                    cur_country_name = source[x]["country_name"]["name"]
-                    ai_date = source[x]["ai"]["date"]
                     
-                    #mostly used name cases: normal (based on tag), CIVILWAR_FACTION_NAME, province (PROV4546), region (ex: kharesmia_superior), area (achaea_area)
-                    if cur_country_tag in cur_country_name:
-                        try:
-                            cur_country_name = countries_names.at[cur_country_tag,"country_name"]
-                        except:
-                            print("Country "+str(x)+": tag has no name in Mapping: manual change?")
-                    elif "CIVILWAR_FACTION_NAME" in cur_country_name:
-                        try:
-                            cur_country_name = countries_names.at[hist_country_tag+"_ADJ","country_name"]+" revolt of "+ai_date[0:3]
-                        except:
-                            cur_country_name = cur_country_name +" (error)"
-                            #countries_names.at[cur_country_tag+"_ADJ","country_name"]+" revolt"
-                    else:
-                        try:
-                            cur_country_name = gov_names.at[cur_government_key,"gov_name"]+" of "+geography_names.at[cur_country_name,"geography_name"]
-                        except:
-                            try:
-                                cur_country_name = cur_country_name[:cur_country_name.find("_")]
-                                cur_country_name = gov_names.at[cur_government_key,"gov_name"]+" of "+geography_names.at[cur_country_name,"geography_name"]
-                            except:
-                                cur_country_name = gov_names.at[cur_government_key,"gov_name"]+" of "+cur_country_name
+                    country_name = source[x]["country_name"]["name"]
+                    cur_country_tag = source[x]["tag"]
+                    hist_country_tag = source[x]["historical"]
+                    try : government_key = source[x]["government_key"]
+                    except: government_key = ""
+                    capital=source[x]["capital"]                    
+                    try : primary_culture=source[x]["primary_culture"]
+                    except: primary_culture=""
+                    
+                    attr_value = naming.name(country_name,"country",country_tag=cur_country_tag,hist_country_tag=hist_country_tag,gov_type=government_key,capital=capital,culture=primary_culture)
 
-                    attr_value = cur_country_name
                     
                 if "country_name_adj" == attr:
                     cur_country_tag = source[x]["tag"]
+
                     try:
                         cur_country_adj = countries_names.at[cur_country_tag+"_ADJ","country_name"]
                     except:

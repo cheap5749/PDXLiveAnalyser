@@ -1,6 +1,1 @@
-
-@rem rakaly\rakaly.exe melt "../Imperator/save games/821.4.6 - Rome.rome" 
-@rem > "D:/python/Imperator/analyses/mp_rome_grand_camp_821.4.6_melted.rome"
-pause
-rakaly\rakaly.exe json "D:/python/Imperator/analyses/821.4.6 - Rome_melted.rome" > "D:/python/Imperator/analyses/mp_rome_grand_camp_821.json"
-pause
+rakaly\rakaly.exe json "D:/python/Imperator/00_temp/mp_rome_grand_camp/mp_rome_grand_camp_melted.rome">"D:/python/Imperator/01_json/mp_rome_grand_camp/mp_rome_grand_camp24-01-2024_00h18.json"

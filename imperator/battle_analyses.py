@@ -3,15 +3,7 @@ import pandas
 import time
 import csv
 import json
-def test(source):
-    atq_war_exhaust=0
-    dump=[]
-    for truc in source["diplomacy"]["database"]["39"][y]["attacker"]["countries"][z].keys():
-        if "war_exhaustion" in truc:
-            atq_war_exhaust=atq_war_exhaust+float(source["diplomacy"]["database"][x][y]["attacker"]["countries"][z]["war_exhaustion"])
-        else:
-            dump.append(["chier","chier","chier"])
-    return atq_war_exhaust
+
     
 def extract(source):
 
