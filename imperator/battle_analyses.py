@@ -1,9 +1,4 @@
-import os
 import pandas
-import time
-import csv
-import json
-
     
 def extract(source):
 
@@ -75,10 +70,6 @@ def extract(source):
                                 remaining=remaining+battle["attacker"]["countries"][i][j]["remaining"]
                             if "captured" in battle["attacker"]["countries"][i][j]:
                                 captured=captured+battle["attacker"]["countries"][i][j]["captured"]
-                                #debug
-                            #print([round(count,0),round(losses,0),round(remaining,0),round(captured,0)])
-                            #print(battle["attacker"]["countries"][i][j])
-                    #atq_stats.append([atq_country,round(count,0),round(losses,0),round(remaining,0),round(captured,0)])
                     result.append([atq_country,"atq",war_id,battle_count,location,date,bool_attack_win,atq_leader,atq_popularity_change,round(count,0),round(losses,0),round(remaining,0),round(captured,0)])
                 
                 def_stats=[]
@@ -111,12 +102,7 @@ def extract(source):
 
                     result.append([def_country,"def",war_id,battle_count,location,date,not(bool_attack_win),def_leader,def_popularity_change,round(count,0),round(losses,0),round(remaining,0),round(captured,0)])
 
-
-    #output=pandas.DataFrame(currentobj)
     output=pandas.DataFrame(result)
-    #output.columns = attributes.keys()
-    #output=pandas.DataFrame(battles)
-    #output.columns = ["War #","Battle #","Location","Date","Attack win?","Atq Leader","Atq Leader pop change","Def Leader","Def Leader pop change","Atq War exhaust","Def War exhaust"]
     output.columns = ["Country","Atq/def","War #","Battle #","Location","Date","Win?","Leader","Leader pop change","Engaged troop","Losses","Remaining","Captured"]
 
     return output

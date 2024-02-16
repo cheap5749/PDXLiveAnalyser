@@ -256,6 +256,7 @@ capariensian;numidian;Capariensian;Numidian
 abannaean;numidian;Abannaean;Numidian
 cetianian;numidian;Cetianian;Numidian
 elamite;persia;Elamite;Iranian
+pasargadi;persia;Pasargadi;Iranian
 utian;persia;Utian;Iranian
 sagartian;persia;Agartian;Iranian
 uxian;persia;Uxian;Iranian
@@ -351,3 +352,4 @@ yuezhi;bactrian;Yuezhi;Bactrian
 tocharian;bactrian;Tocharian;Bactrian
 hunnic;bactrian;Hunnic;Bactrian
 huna;bactrian;Huna;Bactrian
+bactrian;bactrian;Bactrian;Bactrian

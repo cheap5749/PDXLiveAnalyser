@@ -3,6 +3,7 @@ import pandas
 import time
 import csv
 import json
+from imperator import naming
 def test(source):
     print (source)
     
@@ -17,6 +18,7 @@ def extract(source):
         #now this level: source['state']['state_database']["state_id"]
         province=provinces[province_id]
         province_name=province["province_name"]["name"]
+        province_name_text=naming.name(province["province_name"]["name"],"geography")
         pop_count=0
         try : state=province["state"]
         except: state="none"
@@ -86,15 +88,15 @@ def extract(source):
                     pop_count=pop_count+1
                     pop_placement.append([province_id,pop])
 
-        result.append([province_id,province_name,state, owner, controller,pop_count, last_owner_change, last_controller_change, original_culture, original_religion, culture, religion, garrison, civilization_value, trade_goods, num_of_roads, province_rank, buildings, looted, plundered, holdings, holy_site, great_work, treasures])
+        result.append([province_id,province_name,province_name_text,state, owner, controller,pop_count, last_owner_change, last_controller_change, original_culture, original_religion, culture, religion, garrison, civilization_value, trade_goods, num_of_roads, province_rank, buildings, looted, plundered, holdings, holy_site, great_work, treasures])
 
     output=pandas.DataFrame(result)
     pop_placement=pandas.DataFrame(pop_placement)
     pop_placement.columns = ["province_id","pop"]
 
-    output.columns = ["province_id","province_name","state", "owner", "controller","pop_count", "last_owner_change", "last_controller_change", "original_culture", "original_religion","culture", "religion", "garrison", "civilization_value", "trade_goods", "num_of_roads", "province_rank", "buildings", "looted", "plundered", "holdings", "holy_site", "great_work", "treasures"]
+    output.columns = ["province_id","province_name","province_name_text","state", "owner", "controller","pop_count", "last_owner_change", "last_controller_change", "original_culture", "original_religion","culture", "religion", "garrison", "civilization_value", "trade_goods", "num_of_roads", "province_rank", "buildings", "looted", "plundered", "holdings", "holy_site", "great_work", "treasures"]
     output.set_index("province_id", inplace=True)
-
+    # output["province_name_text"]
     pop_placement=pop_placement.sort_values(by=["pop"])
     pop_placement.set_index("pop", inplace=True)
 

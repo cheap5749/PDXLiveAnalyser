@@ -1,1 +1,1 @@
-rakaly\rakaly.exe json "D:/python/Imperator/00_temp/mp_rome_grand_camp/mp_rome_grand_camp_melted.rome">"D:/python/Imperator/01_json/mp_rome_grand_camp/mp_rome_grand_camp24-01-2024_00h18.json"
+rakaly\rakaly.exe json "D:/python/Imperator/00_temp/mp_rome_grand_camp/mp_rome_grand_camp_melted.rome">"D:/python/Imperator/01_json/mp_rome_grand_camp/mp_rome_grand_camp14-02-2024_01h50.json"

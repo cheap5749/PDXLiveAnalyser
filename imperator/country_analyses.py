@@ -8,33 +8,17 @@ def test(source):
     
 def extract(source):
     
-    with open("imperator/mappings/countries_names.csv") as countries_names:
-        countries_names = pandas.read_csv(countries_names, sep=";", header=None)
-        countries_names.columns = ["country_name_key", "country_name"]
-        countries_names.set_index("country_name_key", inplace=True)
-        
-    with open("imperator/mappings/geography_names.csv") as geography_names:
-        geography_names = pandas.read_csv(geography_names, sep=";", header=None)
-        geography_names.columns = ["geography_name_key", "geography_name"]
-        geography_names.set_index("geography_name_key", inplace=True)
-        
-    with open("imperator/mappings/gov_names.csv") as gov_names:
-        gov_names = pandas.read_csv(gov_names, sep=";", header=None)
-        gov_names.columns = ["gov_name_key", "gov_name"]
-        try :
-            gov_names.set_index("gov_name_key", inplace=True)
-        except:
-            print(gov_names)
-        
+
     attributes={
     "tag": ["tag","N/A","N/A"],
     "country_name_key": ["country_name","name","N/A"],
     "country_name_text": ["N/A","N/A","N/A"],
     "country_name_adj": ["N/A","N/A","N/A"],
+    "country_color": ["N/A","N/A","N/A"],
     "total_population": ["total_population","N/A","N/A"],
     "total_holdings": ["total_holdings","N/A","N/A"],
     "historical": ["historical","N/A","N/A"],
-    "country_type": ["country_type","N/A","N/A"],
+    # "country_type": ["country_type","N/A","N/A"],
     "graphical_culture": ["graphical_culture","N/A","N/A"],
     "manpower": ["currency_data","manpower","N/A"],
     "max_manpower": ["max_manpower","N/A","N/A"],
@@ -58,35 +42,35 @@ def extract(source):
     "civic_tech": ["technology","civic_tech","level"],
     "oratory_tech": ["technology","oratory_tech","level"],
     "religious_tech": ["technology","religious_tech","level"],
-    "economy_tax_income": ["economy","income",0],
-    "economy_trade_income": ["economy","income",1],
-    "economy_vassal_income": ["economy","income",2],
-    "economy_expense": ["economy","expense","expense"],
-    "economy_lastyear_tax_income": ["economy","lastyearincome",0],
-    "economy_lastyear_trade_income": ["economy","lastyearincome",1],
-    "economy_lastyear_vassal_income": ["economy","lastyearincome",2],
-    "economy_lastyearexpense": ["economy","lastyearexpense","N/A"],
+    # "economy_tax_income": ["economy","income",0],
+    # "economy_trade_income": ["economy","income",1],
+    # "economy_vassal_income": ["economy","income",2],
+    # "economy_expense": ["economy","expense","expense"],
+    # "economy_lastyear_tax_income": ["economy","lastyearincome",0],
+    # "economy_lastyear_trade_income": ["economy","lastyearincome",1],
+    # "economy_lastyear_vassal_income": ["economy","lastyearincome",2],
+    # "economy_lastyearexpense": ["economy","lastyearexpense","N/A"],
     "economy_lastmonth_tax_income": ["economy","lastmonthincometable",0],
     "economy_lastmonth_trade_income": ["economy","lastmonthincometable",1],
     "economy_lastmonth_vassal_income": ["economy","lastmonthincometable",2],
     "economy_lastmonthexpense": ["economy","lastmonthexpense","N/A"],
     "telemetry_gold_tax": ["economy","telemetry_gold_tax","N/A"],
-    "religious_unity": ["religious_unity","N/A","N/A"],
+    # "religious_unity": ["religious_unity","N/A","N/A"],
     "foreign_religion_pops": ["foreign_religion_pops","N/A","N/A"],
     "government_key": ["government_key","N/A","N/A"],
     "active_inventions": ["active_inventions","N/A","N/A"],
-    "possible_holdings": ["possible_holdings","N/A","N/A"],
+    # "possible_holdings": ["possible_holdings","N/A","N/A"],
     "total_power_base": ["total_power_base","N/A","N/A"],
     "non_loyal_power_base": ["non_loyal_power_base","N/A","N/A"],
     "armies": ["armies","N/A","N/A"],
     "navies": ["navies","N/A","N/A"],
     "total_cohorts": ["total_cohorts","N/A","N/A"],
-    "loyal_cohorts": ["loyal_cohorts","N/A","N/A"],
-    "disloyal_cohorts": ["disloyal_cohorts","N/A","N/A"],
-    "loyal_pops": ["loyal_pops","N/A","N/A"],
+    # "loyal_cohorts": ["loyal_cohorts","N/A","N/A"],
+    # "disloyal_cohorts": ["disloyal_cohorts","N/A","N/A"],
+    # "loyal_pops": ["loyal_pops","N/A","N/A"],
     "centralization": ["centralization","N/A","N/A"],
     "legitimacy": ["legitimacy","N/A","N/A"],
-    "cultures_num_of_cultures_with_noble_rights": ["cultures","num_of_cultures_with_noble_rights","N/A"],
+    # "cultures_num_of_cultures_with_noble_rights": ["cultures","num_of_cultures_with_noble_rights","N/A"],
     }
 
     result=[]
@@ -114,7 +98,18 @@ def extract(source):
                 else: None
                         
                 if "tech" in attr:
-                    attr_value = round(source[x]["technology"][attr]["level"] + source[x]["technology"][attr]["progress"]/100,2)
+                    attr_value = round(source[x]["technology"][attr]["level"] + source[x]["technology"][attr]["progress"]/100,2)        
+                if "country_color" in attr:
+                    def clamp(x): 
+                        return max(0, min(x, 255))
+                    color1=source[x]["color"]["rgb"]
+                    color2=source[x]["color2"]["rgb"]
+                    color3=source[x]["color3"]["rgb"]
+
+                    color1 = "#{0:02x}{1:02x}{2:02x}".format(clamp(color1[0]), clamp(color1[1]), clamp(color1[2]))
+                    color2 = "#{0:02x}{1:02x}{2:02x}".format(clamp(color2[0]), clamp(color2[1]), clamp(color2[2]))
+                    color3 = "#{0:02x}{1:02x}{2:02x}".format(clamp(color3[0]), clamp(color3[1]), clamp(color3[2]))
+                    attr_value=[color1,color2,color3]
                 if attr == "ports" and "ports" in source[x]:
                     attr_value = len(source[x]["ports"])
                 if attr == "manpower" :
@@ -139,25 +134,22 @@ def extract(source):
                     capital=source[x]["capital"]                    
                     try : primary_culture=source[x]["primary_culture"]
                     except: primary_culture=""
-                    
                     attr_value = naming.name(country_name,"country",country_tag=cur_country_tag,hist_country_tag=hist_country_tag,gov_type=government_key,capital=capital,culture=primary_culture)
 
-                    
                 if "country_name_adj" == attr:
                     cur_country_tag = source[x]["tag"]
 
-                    try:
-                        cur_country_adj = countries_names.at[cur_country_tag+"_ADJ","country_name"]
-                    except:
-                        cur_country_adj = cur_country_tag
+                    try: cur_country_adj =  naming.name(country_name,"country_adj",culture=primary_culture)
+                    except: cur_country_adj = cur_country_tag
                         
                     attr_value = cur_country_adj
                     
                 ######################### HOPEFULLY WE DONE
                 if "active_inventions" in attr:
                     attr_value = sum(source[x]["active_inventions"])
-                else: None
-                
+                if attr == "government_key":
+                    attr_value = naming.name(attr_value,"gov_type")
+
                 try:
                     attr_value = int(attr_value)
                 except:
@@ -166,8 +158,12 @@ def extract(source):
                 result.append(attr_value)
             currentobj.append(result)
 
-    countries=pandas.DataFrame(currentobj, index=(x for x in source.keys()))
-    countries.columns = attributes.keys()
+    output=pandas.DataFrame(currentobj, index=(x for x in source.keys()))
+    output.columns = attributes.keys()
+    output["density"] = output["total_population"]/output["total_holdings"]
+    output["total_monthly_income"] = output["economy_lastmonth_tax_income"]+output["economy_lastmonth_trade_income"]+output["economy_lastmonth_vassal_income"]
+    output["net_monthly_income"] = output["total_monthly_income"]-output["economy_lastmonthexpense"]
+    output["rebellion_power"] = (round(output["non_loyal_power_base"]/output["total_power_base"],4)*100)#.map('{:.2%}'.format)
 
-
-    return countries
+    # output = output.drop(labels="graphical_culture",axis=1).drop(labels="historical",axis=1).drop(labels="country_name_key",axis=1)
+    return output
